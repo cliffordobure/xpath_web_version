@@ -1,6 +1,7 @@
 import { Router } from 'express';
 import { body, validationResult } from 'express-validator';
 import mongoose from 'mongoose';
+import { User } from '../models/User.js';
 import { TestType } from '../models/TestType.js';
 import { SlideImage } from '../models/SlideImage.js';
 import { Order } from '../models/Order.js';
@@ -8,6 +9,29 @@ import { Patient } from '../models/Patient.js';
 import { SystemSettings } from '../models/SystemSettings.js';
 
 const router = Router();
+
+/** One-time: create or reset default admin (admin@xpath.lims / admin123). Call this if login fails after deploy. */
+router.get('/ensure-admin', async (req, res) => {
+  if (mongoose.connection.readyState !== 1) {
+    return res.status(503).json({ message: 'Database not connected' });
+  }
+  try {
+    const adminEmail = 'admin@xpath.lims';
+    let admin = await User.findOne({ email: adminEmail }).select('+password');
+    if (admin) {
+      admin.password = 'admin123';
+      admin.name = 'Admin';
+      admin.role = 'admin';
+      await admin.save();
+    } else {
+      await User.create({ email: adminEmail, password: 'admin123', name: 'Admin', role: 'admin' });
+    }
+    res.json({ ok: true, message: 'Admin ready. Log in with admin@xpath.lims / admin123' });
+  } catch (e) {
+    console.error('ensure-admin:', e);
+    res.status(500).json({ message: e.message || 'Failed' });
+  }
+});
 
 /** Public config for landing page — no auth. Returns lab branding, contact, and display options. */
 router.get('/config', async (req, res) => {
