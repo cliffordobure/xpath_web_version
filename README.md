@@ -41,6 +41,8 @@ npm run seed
 # Login: admin@xpath.lims / admin123
 ```
 
+**If the backend is hosted (e.g. Render)** and you log in from the Vercel frontend, the admin must exist in the **hosted backend’s database**. Run the seed with that database URL (e.g. copy `MONGODB_URI` from Render’s Environment, then from your machine: `cd backend` and `MONGODB_URI="<paste-uri>" npm run seed`). Then log in again with admin@xpath.lims / admin123.
+
 ### 2. Frontend
 
 ```bash
