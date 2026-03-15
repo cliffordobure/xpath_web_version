@@ -4,10 +4,11 @@ import AssignmentIcon from '@mui/icons-material/Assignment';
 import AttachMoneyIcon from '@mui/icons-material/AttachMoney';
 import TrendingUpIcon from '@mui/icons-material/TrendingUp';
 import { doctorsApi, settingsApi } from '../api/endpoints';
+import type { Order } from '../api/endpoints';
 import { formatPrice } from '../utils/currency';
 import { useAuthStore } from '../stores/authStore';
 
-function getPatientName(patient: { firstName?: string; lastName?: string } | string): string {
+function getPatientName(patient: Order['patient']): string {
   if (!patient || typeof patient !== 'object') return '—';
   const first = patient.firstName ?? '';
   const last = patient.lastName ?? '';
@@ -15,7 +16,7 @@ function getPatientName(patient: { firstName?: string; lastName?: string } | str
 }
 
 export default function DoctorPortal() {
-  const { user } = useAuthStore();
+  useAuthStore();
   const { data: settings } = useQuery({
     queryKey: ['settings'],
     queryFn: () => settingsApi.get().then((r) => r.data),
@@ -117,10 +118,10 @@ export default function DoctorPortal() {
               </TableHead>
               <TableBody>
                 {stats.recentOrders?.length ? (
-                  stats.recentOrders.map((order: { _id: string; orderNumber?: string; patient?: { firstName?: string; lastName?: string }; status?: string; createdAt?: string }) => (
+                  stats.recentOrders.map((order: Order) => (
                     <TableRow key={order._id}>
                       <TableCell>{order.orderNumber ?? order._id}</TableCell>
-                      <TableCell>{getPatientName(order.patient as { firstName?: string; lastName?: string })}</TableCell>
+                      <TableCell>{getPatientName(order.patient)}</TableCell>
                       <TableCell>{order.status ?? '—'}</TableCell>
                       <TableCell>{order.createdAt ? new Date(order.createdAt).toLocaleDateString() : '—'}</TableCell>
                     </TableRow>

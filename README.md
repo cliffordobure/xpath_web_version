@@ -55,7 +55,7 @@ Open `http://localhost:5173`. The app proxies `/api` to the backend when using d
 
 **Backend:** Ensure `MONGODB_URI` and `JWT_SECRET` are set. Run `npm start`.
 
-**Frontend:** Set `VITE_API_URL` to your API base URL (e.g. `https://lims.lab.local/api`). Then:
+**Frontend:** Production builds default to the hosted backend at `https://xpath-web-version.onrender.com/api`. To override, set `VITE_API_URL` (e.g. `https://lims.lab.local/api`). Then:
 
 ```bash
 cd frontend
@@ -71,8 +71,8 @@ Serve the `dist/` folder with Nginx or any static host. Configure the reverse pr
 | `PORT` | Backend | API port (default 3000) |
 | `MONGODB_URI` | Backend | MongoDB connection string |
 | `JWT_SECRET` | Backend | Secret for signing JWTs |
-| `CORS_ORIGIN` | Backend | Allowed web origin (e.g. https://lims.lab.local) |
-| `VITE_API_URL` | Frontend (build) | API base URL (e.g. /api or https://api.lims.lab.local) |
+| `CORS_ORIGIN` | Backend | Allowed web origin (e.g. https://your-app.vercel.app when frontend is on Vercel). Required when frontend and backend are on different domains. |
+| `VITE_API_URL` | Frontend (build) | API base URL. Default in production: `https://xpath-web-version.onrender.com/api` |
 | `SCANNER_API_KEY` | Backend | Optional. If set, POST /api/public/slide-image requires X-API-Key header for scanner uploads. |
 
 ## Routes (feature parity)

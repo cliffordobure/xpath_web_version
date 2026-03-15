@@ -68,7 +68,7 @@ export default function Courier() {
 
   const { data: pickupRequestsData } = useQuery({
     queryKey: ['orders', 'pickupRequests'],
-    queryFn: () => ordersApi.list({ pickupRequests: 'true', limit: 50 }).then((r) => r.data),
+    queryFn: () => ordersApi.list({ pickupRequests: true, limit: 50 }).then((r) => r.data),
   });
   const { data: myPickupsData } = useQuery({
     queryKey: ['orders', 'assignedToMeCourier'],

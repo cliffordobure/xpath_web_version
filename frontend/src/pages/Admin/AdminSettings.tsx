@@ -14,7 +14,7 @@ import {
 } from '@mui/material';
 import { useLocaleStore } from '../../stores/localeStore';
 import { t } from '../../i18n/translations';
-import { settingsApi, testTypesApi, SUPPORTED_CURRENCIES, type SystemSettingsPayload } from '../../api/endpoints';
+import { settingsApi, testTypesApi, SUPPORTED_CURRENCIES, type SystemSettingsPayload, type Currency } from '../../api/endpoints';
 import type { TestType } from '../../api/endpoints';
 
 const TIMEZONES = [
@@ -101,7 +101,7 @@ export default function AdminSettings() {
       businessHours: businessHours.trim() || undefined,
       accreditations: accreditationsStr.trim() ? accreditationsStr.split(/[,;]/).map((s) => s.trim()).filter(Boolean) : undefined,
       timezone: timezone || 'UTC',
-      currency: SUPPORTED_CURRENCIES.includes(currency as 'XAF' | 'USD' | 'EUR') ? currency : undefined,
+      currency: SUPPORTED_CURRENCIES.includes(currency as Currency) ? (currency as Currency) : undefined,
     };
     updateSettings.mutate(payload);
   };

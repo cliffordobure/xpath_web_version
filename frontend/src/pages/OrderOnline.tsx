@@ -26,7 +26,6 @@ import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import LocationOnIcon from '@mui/icons-material/LocationOn';
 import ClearIcon from '@mui/icons-material/Clear';
 import { publicApi } from '../api/endpoints';
-import type { TestType } from '../api/endpoints';
 import { formatPrice } from '../utils/currency';
 
 type PlaceResult = { display_name: string; lat: string; lon: string };

@@ -94,7 +94,7 @@ export default function OrderDetail() {
   });
 
   const updateOrder = useMutation({
-    mutationFn: (payload: { patient?: string; testTypes?: string[]; priority?: string; referringDoctorId?: string | null; referringDoctor?: string; notes?: string }) =>
+    mutationFn: (payload: { patient?: string; testTypes?: string[]; priority?: string; referringDoctorId?: string; referringDoctor?: string; notes?: string }) =>
       ordersApi.update(id!, payload).then((r) => r.data),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['order', id] });
@@ -108,7 +108,7 @@ export default function OrderDetail() {
       patient: editPatientId,
       testTypes: editTestTypeIds,
       priority: editPriority,
-      referringDoctorId: editReferringDoctorId,
+      referringDoctorId: editReferringDoctorId ?? undefined,
       referringDoctor: editReferringDoctor.trim() || undefined,
       notes: editNotes.trim() || undefined,
     });

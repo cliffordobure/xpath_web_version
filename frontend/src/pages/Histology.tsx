@@ -13,33 +13,36 @@ import {
   Alert,
   List,
   ListItem,
+  ListItemButton,
   ListItemText,
   FormControl,
   InputLabel,
   Select,
   MenuItem,
   Grid,
-  Link,
 } from '@mui/material';
 import { QRCodeSVG } from 'qrcode.react';
 import { histologyApi } from '../api/endpoints';
 import type { Block, Slide } from '../api/endpoints';
-
-const TAB_VALUES = ['grossing', 'processing', 'embedding', 'sectioning', 'staining'];
 
 function IdWithQR({
   id,
   onClick,
   secondary,
 }: { id: string; onClick?: () => void; secondary?: string }) {
-  return (
-    <ListItem
-      button={!!onClick}
-      onClick={onClick}
-      sx={{ alignItems: 'flex-start', borderRadius: 1, gap: 1 }}
-    >
+  const content = (
+    <>
       <QRCodeSVG value={id} size={56} level="M" />
       <ListItemText primary={id} secondary={secondary ?? (onClick ? 'Click to use in form' : 'Scan with QR reader')} primaryTypographyProps={{ fontFamily: 'monospace', fontSize: '0.85rem' }} />
+    </>
+  );
+  return onClick ? (
+    <ListItemButton onClick={onClick} sx={{ alignItems: 'flex-start', borderRadius: 1, gap: 1 }}>
+      {content}
+    </ListItemButton>
+  ) : (
+    <ListItem sx={{ alignItems: 'flex-start', borderRadius: 1, gap: 1 }}>
+      {content}
     </ListItem>
   );
 }
@@ -85,7 +88,6 @@ export default function Histology() {
 
   const blocks = blocksData ?? [];
   const accession = accessionData?.accession;
-  const accessionBlocks = accessionData?.blocks ?? [];
   const accessionSlides = (tab === 0 || tab === 1 ? accessionData?.slides : accessionDataForSlides?.slides) ?? [];
 
   const saveGrossing = useMutation({

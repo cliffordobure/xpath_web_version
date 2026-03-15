@@ -1,6 +1,9 @@
 import axios from 'axios';
 
-const baseURL = import.meta.env.VITE_API_URL || '/api';
+const defaultApiUrl = import.meta.env.PROD
+  ? 'https://xpath-web-version.onrender.com/api'
+  : '/api';
+const baseURL = import.meta.env.VITE_API_URL || defaultApiUrl;
 
 export const api = axios.create({
   baseURL,

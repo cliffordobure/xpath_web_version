@@ -17,7 +17,7 @@ import {
 import LockIcon from '@mui/icons-material/Lock';
 import EditIcon from '@mui/icons-material/Edit';
 import { ordersApi, slideImagesApi } from '../api/endpoints';
-import type { Order, SlideImage } from '../api/endpoints';
+import type { SlideImage } from '../api/endpoints';
 
 export default function PathologistCaseView() {
   const { orderId } = useParams<{ orderId: string }>();
@@ -79,11 +79,12 @@ export default function PathologistCaseView() {
       </Box>
     );
   }
-  if (orderLoading || orderError) {
+  if (orderLoading || orderError || !order) {
     return (
       <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, flexDirection: 'column', py: 4 }}>
         {orderLoading && <CircularProgress />}
         {orderError && <Alert severity="error">Order not found.</Alert>}
+        {!orderLoading && !orderError && !order && <Alert severity="info">Loading order…</Alert>}
         <Button component={RouterLink} to="/pathologist-review">
           Back to Pathologist review
         </Button>
@@ -91,11 +92,11 @@ export default function PathologistCaseView() {
     );
   }
 
-  const patient = typeof order!.patient === 'object' && order!.patient
+  const patient = typeof order.patient === 'object' && order.patient
     ? order.patient
     : null;
   const patientName = patient ? `${patient.firstName} ${patient.lastName}` : '—';
-  const isLocked = !!order!.reportLockedAt;
+  const isLocked = !!order.reportLockedAt;
 
   return (
     <Box>
@@ -104,7 +105,7 @@ export default function PathologistCaseView() {
           ← Back to list
         </Button>
         <Typography variant="h4" fontWeight={700}>
-          Case: {order!.orderNumber}
+          Case: {order.orderNumber}
         </Typography>
         {isLocked && (
           <Typography variant="body2" color="success.main" sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
@@ -118,10 +119,10 @@ export default function PathologistCaseView() {
           <Card>
             <CardContent>
               <Typography variant="subtitle2" color="text.secondary">Order</Typography>
-              <Typography variant="body1"><strong>{order!.orderNumber}</strong></Typography>
+              <Typography variant="body1"><strong>{order.orderNumber}</strong></Typography>
               <Typography variant="body2">Patient: {patientName}</Typography>
-              <Typography variant="body2">Status: {order!.status}</Typography>
-              {order!.referringDoctor && (
+              <Typography variant="body2">Status: {order.status}</Typography>
+              {order.referringDoctor && (
                 <Typography variant="body2">Referring: {order.referringDoctor}</Typography>
               )}
             </CardContent>

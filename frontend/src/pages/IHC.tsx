@@ -101,7 +101,6 @@ export default function IHC() {
 
   const accession = accessionData?.accession;
   const slides = accessionData?.slides ?? [];
-  const blocks = accessionData?.blocks ?? [];
 
   const handleLookup = () => setLookupTrigger(accessionId.trim() || null);
 

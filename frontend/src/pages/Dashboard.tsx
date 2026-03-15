@@ -147,7 +147,7 @@ export default function Dashboard() {
 
   const { data: pickupRequestsData } = useQuery({
     queryKey: ['orders', 'pickupRequests'],
-    queryFn: () => ordersApi.list({ pickupRequests: 'true', limit: 50 }).then((r) => r.data),
+    queryFn: () => ordersApi.list({ pickupRequests: true, limit: 50 }).then((r) => r.data),
     enabled: isCourier,
   });
   const { data: myPickupsData } = useQuery({
@@ -463,7 +463,7 @@ export default function Dashboard() {
                               <Cell key={i} fill={orderStatusChartData[i].color} />
                             ))}
                           </Pie>
-                          <Tooltip formatter={(value: number) => [value, 'Orders']} />
+                          <Tooltip formatter={(value) => [Number(value ?? 0), 'Orders']} />
                         </PieChart>
                       </ResponsiveContainer>
                     </Box>

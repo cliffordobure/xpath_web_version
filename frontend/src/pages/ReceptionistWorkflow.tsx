@@ -83,7 +83,7 @@ export default function ReceptionistWorkflow() {
     value,
   }));
   const [assignDialog, setAssignDialog] = useState<Order | null>(null);
-  const [courierOrder, setCourierOrder] = useState<Order | null>(null);
+  const [_courierOrder, setCourierOrder] = useState<Order | null>(null);
   const [paymentAmount, setPaymentAmount] = useState('');
   const [paymentMethod, setPaymentMethod] = useState<string>('cash');
   const [assignTechId, setAssignTechId] = useState('');

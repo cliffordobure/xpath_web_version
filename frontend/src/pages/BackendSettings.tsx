@@ -2,8 +2,12 @@ import { useState } from 'react';
 import { Box, Typography, Card, CardContent, TextField, Button, Alert } from '@mui/material';
 import { api } from '../api/client';
 
+const defaultDisplayUrl = import.meta.env.PROD
+  ? 'https://xpath-web-version.onrender.com/api'
+  : '/api';
+
 export default function BackendSettings() {
-  const [url, setUrl] = useState(import.meta.env.VITE_API_URL || '/api');
+  const [url, setUrl] = useState(import.meta.env.VITE_API_URL || defaultDisplayUrl);
   const [status, setStatus] = useState<'idle' | 'success' | 'error'>('idle');
 
   const testConnection = async () => {

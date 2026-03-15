@@ -256,13 +256,13 @@ export default function Financial() {
                         cx="50%"
                         cy="50%"
                         outerRadius={90}
-                        label={({ name, percent }) => `${name} ${(percent * 100).toFixed(0)}%`}
+                        label={({ name, percent }) => `${name} ${((percent ?? 0) * 100).toFixed(0)}%`}
                       >
                         {chartByMethod.map((_, i) => (
                           <Cell key={i} fill={CHART_COLORS[i % CHART_COLORS.length]} />
                         ))}
                       </Pie>
-                      <Tooltip formatter={(value: number) => [formatPrice(value, currency), 'Amount']} />
+                      <Tooltip formatter={(value) => [formatPrice(Number(value ?? 0), currency), 'Amount']} />
                     </PieChart>
                   </ResponsiveContainer>
                 </Box>
@@ -282,7 +282,7 @@ export default function Financial() {
                     <BarChart data={chartByDate} margin={{ top: 8, right: 8, left: 8, bottom: 8 }}>
                       <XAxis dataKey="date" tick={{ fontSize: 11 }} />
                       <YAxis tick={{ fontSize: 11 }} tickFormatter={(v) => (v >= 1000 ? `${v / 1000}k` : String(v))} />
-                      <Tooltip formatter={(value: number) => [formatPrice(value, currency), 'Revenue']} labelFormatter={(_, payload) => payload?.[0]?.payload?.date} />
+                      <Tooltip formatter={(value) => [formatPrice(Number(value ?? 0), currency), 'Revenue']} labelFormatter={(_, payload) => payload?.[0]?.payload?.date} />
                       <Bar dataKey="amount" fill={theme.palette.primary.main} radius={[4, 4, 0, 0]} />
                     </BarChart>
                   </ResponsiveContainer>

@@ -26,7 +26,7 @@ export default function Receiving() {
   const [orderSearch, setOrderSearch] = useState('');
   const [searchTrigger, setSearchTrigger] = useState<string | null>(null);
 
-  const { data: order, isLoading: orderLoading, error: orderError } = useQuery({
+  const { data: order, isLoading: orderLoading } = useQuery({
     queryKey: ['order-search', searchTrigger],
     queryFn: async () => {
       if (!searchTrigger?.trim()) return null;
