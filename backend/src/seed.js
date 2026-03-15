@@ -32,10 +32,17 @@ const seed = async () => {
   }
   await mongoose.connect(process.env.MONGODB_URI);
 
-  // Admin user
-  const exists = await User.findOne({ email: 'admin@xpath.lims' });
-  if (!exists) {
-    await User.create({ email: 'admin@xpath.lims', password: 'admin123', name: 'Admin', role: 'admin' });
+  // Admin user: create or reset so login is always admin@xpath.lims / admin123
+  const adminEmail = 'admin@xpath.lims';
+  let admin = await User.findOne({ email: adminEmail });
+  if (admin) {
+    admin.password = 'admin123';
+    admin.name = 'Admin';
+    admin.role = 'admin';
+    await admin.save();
+    console.log('Reset admin@xpath.lims / admin123');
+  } else {
+    await User.create({ email: adminEmail, password: 'admin123', name: 'Admin', role: 'admin' });
     console.log('Created admin@xpath.lims / admin123');
   }
 
