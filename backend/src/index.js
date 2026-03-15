@@ -28,16 +28,20 @@ import { User } from './models/User.js';
 const app = express();
 const PORT = process.env.PORT || 3000;
 
-// Allow Vercel frontend and localhost by default; override with CORS_ORIGIN (comma-separated for multiple).
-const allowedOrigins = process.env.CORS_ORIGIN
-  ? process.env.CORS_ORIGIN.split(',').map((s) => s.trim())
-  : ['http://localhost:5173', 'https://xpath-web-version.vercel.app'];
+// Always allow Vercel app and localhost; add any extra origins from CORS_ORIGIN (comma-separated).
+const defaultOrigins = ['http://localhost:5173', 'https://xpath-web-version.vercel.app'];
+const extraOrigins = process.env.CORS_ORIGIN
+  ? process.env.CORS_ORIGIN.split(',').map((s) => s.trim()).filter(Boolean)
+  : [];
+const allowedOrigins = [...new Set([...defaultOrigins, ...extraOrigins])];
 app.use(cors({
   origin: (origin, callback) => {
     if (!origin || allowedOrigins.includes(origin)) callback(null, origin || allowedOrigins[0]);
     else callback(null, false);
   },
   credentials: true,
+  methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization'],
 }));
 app.use(express.json());
 
