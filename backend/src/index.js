@@ -23,6 +23,7 @@ import slideImagesRoutes from './routes/slideImages.js';
 import notificationsRoutes from './routes/notifications.js';
 import doctorsRoutes from './routes/doctors.js';
 import { authMiddleware } from './middleware/auth.js';
+import { User } from './models/User.js';
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -63,11 +64,28 @@ app.use((err, req, res, next) => {
   res.status(500).json({ message: err.message || 'Internal server error' });
 });
 
+/** Ensure default admin exists (create or reset) so hosted backend works without running seed manually. */
+async function ensureDefaultAdmin() {
+  const adminEmail = 'admin@xpath.lims';
+  let admin = await User.findOne({ email: adminEmail }).select('+password');
+  if (admin) {
+    admin.password = 'admin123';
+    admin.name = 'Admin';
+    admin.role = 'admin';
+    await admin.save();
+    console.log('Default admin ready: admin@xpath.lims / admin123');
+  } else {
+    await User.create({ email: adminEmail, password: 'admin123', name: 'Admin', role: 'admin' });
+    console.log('Created default admin: admin@xpath.lims / admin123');
+  }
+}
+
 const start = async () => {
   try {
     if (process.env.MONGODB_URI) {
       await mongoose.connect(process.env.MONGODB_URI);
       console.log('MongoDB connected');
+      await ensureDefaultAdmin();
     } else {
       console.warn('MONGODB_URI not set. Set it for persistence; /api/health will still respond.');
     }
