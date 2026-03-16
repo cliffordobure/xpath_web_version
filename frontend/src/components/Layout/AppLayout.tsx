@@ -14,6 +14,7 @@ import {
   Divider,
   useTheme,
   useMediaQuery,
+  alpha,
 } from '@mui/material';
 import MenuIcon from '@mui/icons-material/Menu';
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
@@ -39,7 +40,7 @@ export function AppLayout() {
   const getLabel = (item: { labelKey?: string; label: string }) => (item.labelKey ? t(locale, item.labelKey) : item.label);
 
   const drawer = (
-    <Box sx={{ pt: 2, pb: 2, height: '100%', display: 'flex', flexDirection: 'column' }}>
+    <Box sx={{ pt: 2, pb: 2, height: '100%', display: 'flex', flexDirection: 'column', bgcolor: 'background.paper' }}>
       <Box sx={{ px: 2, pb: 1, display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
         <Logo height={36} />
         {!isSmall && (
@@ -60,18 +61,19 @@ export function AppLayout() {
               sx={{
                 borderRadius: 2,
                 mb: 0.5,
+                mx: 1,
                 pl: 2,
                 py: 1.25,
                 borderLeft: '3px solid',
                 borderLeftColor: active ? 'primary.main' : 'transparent',
-                bgcolor: active ? 'action.selected' : 'transparent',
+                bgcolor: active ? alpha(theme.palette.primary.main, 0.08) : 'transparent',
                 '&.Mui-selected': {
-                  bgcolor: 'action.selected',
-                  '&:hover': { bgcolor: 'action.hover' },
+                  bgcolor: alpha(theme.palette.primary.main, 0.08),
+                  '&:hover': { bgcolor: alpha(theme.palette.primary.main, 0.12) },
                 },
               }}
             >
-              <ListItemIcon sx={{ minWidth: 40, color: active ? 'primary.main' : 'inherit' }}>{item.icon}</ListItemIcon>
+              <ListItemIcon sx={{ minWidth: 40, color: active ? 'primary.main' : 'text.secondary' }}>{item.icon}</ListItemIcon>
               <ListItemText primary={getLabel(item)} primaryTypographyProps={{ fontSize: '0.9rem', fontWeight: active ? 600 : 400 }} />
             </ListItemButton>
           );
@@ -92,15 +94,16 @@ export function AppLayout() {
                   sx={{
                     borderRadius: 2,
                     mb: 0.5,
+                    mx: 1,
                     pl: 2,
                     py: 1.25,
                     borderLeft: '3px solid',
                     borderLeftColor: active ? 'primary.main' : 'transparent',
-                    bgcolor: active ? 'action.selected' : 'transparent',
-                    '&.Mui-selected': { bgcolor: 'action.selected', '&:hover': { bgcolor: 'action.hover' } },
+                    bgcolor: active ? alpha(theme.palette.primary.main, 0.08) : 'transparent',
+                    '&.Mui-selected': { bgcolor: alpha(theme.palette.primary.main, 0.08), '&:hover': { bgcolor: alpha(theme.palette.primary.main, 0.12) } },
                   }}
                 >
-                  <ListItemIcon sx={{ minWidth: 40, color: active ? 'primary.main' : 'inherit' }}>{item.icon}</ListItemIcon>
+                  <ListItemIcon sx={{ minWidth: 40, color: active ? 'primary.main' : 'text.secondary' }}>{item.icon}</ListItemIcon>
                   <ListItemText primary={getLabel(item)} primaryTypographyProps={{ fontSize: '0.9rem', fontWeight: active ? 600 : 400 }} />
                 </ListItemButton>
               );
@@ -153,7 +156,8 @@ export function AppLayout() {
             top: 64,
             height: 'calc(100% - 64px)',
             borderRight: '1px solid',
-            borderColor: 'divider',
+            borderColor: alpha('#000', 0.08),
+            bgcolor: 'background.paper',
             transition: theme.transitions.create('width', { easing: theme.transitions.easing.sharp, duration: theme.transitions.duration.enteringScreen }),
             overflowX: 'hidden',
           },

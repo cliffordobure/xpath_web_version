@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import { Box, Typography, Grid, Card, CardContent, Button, alpha } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
 import { useQuery } from '@tanstack/react-query';
-import { PieChart, Pie, Cell, ResponsiveContainer, BarChart, Bar, XAxis, YAxis, Tooltip } from 'recharts';
+import { PieChart, Pie, Cell, ResponsiveContainer, BarChart, Bar, XAxis, YAxis, Tooltip, CartesianGrid } from 'recharts';
 import AssignmentIcon from '@mui/icons-material/Assignment';
 import HourglassEmptyIcon from '@mui/icons-material/HourglassEmpty';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
@@ -25,9 +25,18 @@ const cardSx = {
   height: '100%',
   transition: 'box-shadow 0.2s ease, transform 0.2s ease',
   '&:hover': {
-    boxShadow: 4,
+    boxShadow: 6,
     transform: 'translateY(-2px)',
   },
+};
+
+const sectionLabelSx = {
+  color: 'text.secondary',
+  letterSpacing: 1.5,
+  fontWeight: 600,
+  fontSize: '0.75rem',
+  display: 'block',
+  mb: 2,
 };
 
 const PORTAL_CONFIG: Record<string, { title: string; subtitle: string; quickActions: { label: string; path: string; icon: React.ReactNode }[] }> = {
@@ -204,20 +213,20 @@ export default function Dashboard() {
   const showCharts = !isCourier && !isDoctor;
 
   return (
-    <Box sx={{ maxWidth: 1400, mx: 'auto' }}>
+    <Box sx={{ maxWidth: 1400, mx: 'auto', pb: 6 }}>
       {/* Header */}
-      <Typography variant="overline" sx={{ color: 'text.secondary', letterSpacing: 1.2, fontWeight: 600, display: 'block', mb: 0.5 }}>
+      <Typography variant="overline" sx={sectionLabelSx}>
         Dashboard
       </Typography>
-      <Typography variant="h4" sx={{ fontWeight: 700, mb: 0.5, letterSpacing: '-0.02em' }}>
+      <Typography variant="h4" sx={{ fontWeight: 700, mb: 0.5, letterSpacing: '-0.02em', color: 'text.primary' }}>
         {portal.title}
       </Typography>
-      <Typography variant="body1" color="text.secondary" sx={{ mb: 4 }}>
+      <Typography variant="body1" color="text.secondary" sx={{ mb: 4, maxWidth: 560 }}>
         {portal.subtitle}
       </Typography>
 
-      {/* Quick actions – card-style buttons */}
-      <Typography variant="overline" sx={{ color: 'text.secondary', letterSpacing: 1, fontWeight: 600, display: 'block', mb: 2 }}>
+      {/* Quick actions – minimal cards */}
+      <Typography variant="overline" sx={sectionLabelSx}>
         Quick actions
       </Typography>
       <Grid container spacing={2} sx={{ mb: 5 }}>
@@ -231,11 +240,12 @@ export default function Dashboard() {
               sx={{
                 ...cardSx,
                 py: 2,
-                px: 2,
+                px: 2.5,
                 justifyContent: 'flex-start',
                 textAlign: 'left',
                 borderRadius: 2,
-                borderColor: alpha(theme.palette.primary.main, 0.3),
+                border: '1px solid',
+                borderColor: alpha(theme.palette.primary.main, 0.2),
                 bgcolor: 'background.paper',
                 color: 'text.primary',
                 '&:hover': {
@@ -243,7 +253,7 @@ export default function Dashboard() {
                   bgcolor: alpha(theme.palette.primary.main, 0.06),
                 },
               }}
-              startIcon={<Box sx={{ color: 'primary.main', display: 'flex', alignItems: 'center' }}>{a.icon}</Box>}
+              startIcon={<Box sx={{ color: 'primary.main', display: 'flex', alignItems: 'center', opacity: 0.9 }}>{a.icon}</Box>}
             >
               {a.label}
             </Button>
@@ -252,7 +262,7 @@ export default function Dashboard() {
       </Grid>
 
       {/* Overview metrics */}
-      <Typography variant="overline" sx={{ color: 'text.secondary', letterSpacing: 1, fontWeight: 600, display: 'block', mb: 2 }}>
+      <Typography variant="overline" sx={sectionLabelSx}>
         Overview
       </Typography>
       <Grid container spacing={3}>
@@ -275,7 +285,7 @@ export default function Dashboard() {
         ) : isCourier ? (
           <>
             <Grid item xs={12} sm={6} md={4}>
-              <Card sx={{ ...cardSx, bgcolor: 'primary.main', color: 'white' }}>
+              <Card sx={{ ...cardSx, bgcolor: 'primary.main', color: 'white', border: 'none', boxShadow: '0 4px 20px ' + alpha(theme.palette.primary.main, 0.35) }}>
                 <CardContent sx={{ p: 3 }}>
                   <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5, mb: 1.5, opacity: 0.95 }}>
                     <LocalShippingIcon sx={{ fontSize: 24 }} />
@@ -287,7 +297,7 @@ export default function Dashboard() {
               </Card>
             </Grid>
             <Grid item xs={12} sm={6} md={4}>
-              <Card sx={{ ...cardSx, bgcolor: 'background.paper' }}>
+              <Card sx={{ ...cardSx, bgcolor: 'background.paper', borderLeft: '4px solid', borderLeftColor: 'secondary.main' }}>
                 <CardContent sx={{ p: 3 }}>
                   <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5, mb: 1.5 }}>
                     <Box sx={{ width: 40, height: 40, borderRadius: 2, bgcolor: alpha(theme.palette.secondary.main, 0.12), display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
@@ -306,19 +316,19 @@ export default function Dashboard() {
             {isAdmin ? (
               <>
                 <Grid item xs={12} sm={6} md={4}>
-                  <Card sx={{ ...cardSx, bgcolor: 'primary.main', color: 'white' }}>
+                  <Card sx={{ ...cardSx, bgcolor: 'primary.main', color: 'white', border: 'none', boxShadow: '0 4px 20px ' + alpha(theme.palette.primary.main, 0.35) }}>
                     <CardContent sx={{ p: 3 }}>
                       <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5, mb: 1.5, opacity: 0.95 }}>
                         <AssignmentIcon sx={{ fontSize: 24 }} />
                         <Typography variant="body2" fontWeight={500}>All orders</Typography>
                       </Box>
                       <Typography variant="h3" fontWeight={700} sx={{ letterSpacing: '-0.02em' }}>{total}</Typography>
-                      <Typography variant="caption" sx={{ opacity: 0.9 }}>Total count (breakdown below)</Typography>
+                      <Typography variant="caption" sx={{ opacity: 0.9 }}>Total count (breakdown in chart)</Typography>
                     </CardContent>
                   </Card>
                 </Grid>
                 <Grid item xs={12} sm={6} md={4}>
-                  <Card sx={{ ...cardSx, bgcolor: 'background.paper' }}>
+                  <Card sx={{ ...cardSx, bgcolor: 'background.paper', borderLeft: '4px solid', borderLeftColor: 'grey.400' }}>
                     <CardContent sx={{ p: 3 }}>
                       <Typography variant="body2" color="text.secondary" fontWeight={500}>Draft</Typography>
                       <Typography variant="h4" fontWeight={700} color="primary.main" sx={{ mt: 0.5 }}>{draftCount}</Typography>
@@ -326,7 +336,7 @@ export default function Dashboard() {
                   </Card>
                 </Grid>
                 <Grid item xs={12} sm={6} md={4}>
-                  <Card sx={{ ...cardSx, bgcolor: 'background.paper' }}>
+                  <Card sx={{ ...cardSx, bgcolor: 'background.paper', borderLeft: '4px solid', borderLeftColor: 'warning.main' }}>
                     <CardContent sx={{ p: 3 }}>
                       <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5, mb: 0.5 }}>
                         <HourglassEmptyIcon sx={{ color: 'warning.main', fontSize: 22 }} />
@@ -338,7 +348,7 @@ export default function Dashboard() {
                   </Card>
                 </Grid>
                 <Grid item xs={12} sm={6} md={4}>
-                  <Card sx={{ ...cardSx, bgcolor: 'background.paper' }}>
+                  <Card sx={{ ...cardSx, bgcolor: 'background.paper', borderLeft: '4px solid', borderLeftColor: 'success.main' }}>
                     <CardContent sx={{ p: 3 }}>
                       <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5, mb: 0.5 }}>
                         <CheckCircleIcon sx={{ color: 'success.main', fontSize: 22 }} />
@@ -349,7 +359,7 @@ export default function Dashboard() {
                   </Card>
                 </Grid>
                 <Grid item xs={12} sm={6} md={4}>
-                  <Card sx={{ ...cardSx, bgcolor: 'background.paper' }}>
+                  <Card sx={{ ...cardSx, bgcolor: 'background.paper', borderLeft: '4px solid', borderLeftColor: 'secondary.main' }}>
                     <CardContent sx={{ p: 3 }}>
                       <Typography variant="body2" color="text.secondary" fontWeight={500}>Cancelled / archived</Typography>
                       <Typography variant="h4" fontWeight={700} color="text.secondary" sx={{ mt: 0.5 }}>{cancelledCount}</Typography>
@@ -360,7 +370,7 @@ export default function Dashboard() {
             ) : (
               <>
                 <Grid item xs={12} sm={6} md={4}>
-                  <Card sx={{ ...cardSx, bgcolor: 'primary.main', color: 'white' }}>
+                  <Card sx={{ ...cardSx, bgcolor: 'primary.main', color: 'white', border: 'none', boxShadow: '0 4px 20px ' + alpha(theme.palette.primary.main, 0.35) }}>
                     <CardContent sx={{ p: 3 }}>
                       <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5, mb: 1.5, opacity: 0.95 }}>
                         <AssignmentIcon sx={{ fontSize: 24 }} />
@@ -371,7 +381,7 @@ export default function Dashboard() {
                   </Card>
                 </Grid>
                 <Grid item xs={12} sm={6} md={4}>
-                  <Card sx={{ ...cardSx, bgcolor: 'background.paper' }}>
+                  <Card sx={{ ...cardSx, bgcolor: 'background.paper', borderLeft: '4px solid', borderLeftColor: 'warning.main' }}>
                     <CardContent sx={{ p: 3 }}>
                       <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5, mb: 1 }}>
                         <Box sx={{ width: 40, height: 40, borderRadius: 2, bgcolor: alpha(theme.palette.warning.main, 0.12), display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
@@ -384,7 +394,7 @@ export default function Dashboard() {
                   </Card>
                 </Grid>
                 <Grid item xs={12} sm={6} md={4}>
-                  <Card sx={{ ...cardSx, bgcolor: 'background.paper' }}>
+                  <Card sx={{ ...cardSx, bgcolor: 'background.paper', borderLeft: '4px solid', borderLeftColor: 'success.main' }}>
                     <CardContent sx={{ p: 3 }}>
                       <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5, mb: 1 }}>
                         <Box sx={{ width: 40, height: 40, borderRadius: 2, bgcolor: alpha(theme.palette.success.main, 0.12), display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
@@ -403,7 +413,7 @@ export default function Dashboard() {
         {showFinancial && (
           <>
             <Grid item xs={12} sm={6} md={4}>
-              <Card sx={{ ...cardSx, bgcolor: 'background.paper' }}>
+              <Card sx={{ ...cardSx, bgcolor: 'background.paper', borderLeft: '4px solid', borderLeftColor: 'success.main' }}>
                 <CardContent sx={{ p: 3 }}>
                   <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5, mb: 1 }}>
                     <Box sx={{ width: 40, height: 40, borderRadius: 2, bgcolor: alpha(theme.palette.success.main, 0.12), display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
@@ -419,7 +429,7 @@ export default function Dashboard() {
               </Card>
             </Grid>
             <Grid item xs={12} sm={6} md={4}>
-              <Card sx={{ ...cardSx, bgcolor: 'background.paper' }}>
+              <Card sx={{ ...cardSx, bgcolor: 'background.paper', borderLeft: '4px solid', borderLeftColor: 'primary.main' }}>
                 <CardContent sx={{ p: 3 }}>
                   <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5, mb: 1 }}>
                     <Box sx={{ width: 40, height: 40, borderRadius: 2, bgcolor: alpha(theme.palette.primary.main, 0.12), display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
@@ -438,16 +448,17 @@ export default function Dashboard() {
       {/* Charts */}
       {showCharts && (
         <>
-          <Typography variant="overline" sx={{ color: 'text.secondary', letterSpacing: 1, fontWeight: 600, display: 'block', mt: 5, mb: 2 }}>
+          <Typography variant="overline" sx={{ ...sectionLabelSx, mt: 5 }}>
             Analytics
           </Typography>
           <Grid container spacing={3} sx={{ mb: 4 }}>
             {isAdmin && orderStatusChartData.length > 0 && (
               <Grid item xs={12} md={6}>
-                <Card sx={{ borderRadius: 2, bgcolor: 'background.paper', boxShadow: 1 }}>
-                  <CardContent sx={{ p: 2 }}>
-                    <Typography variant="subtitle1" fontWeight={600} sx={{ mb: 2 }}>Orders by status</Typography>
-                    <Box sx={{ height: 260 }}>
+                <Card sx={{ borderRadius: 2, bgcolor: 'background.paper', border: '1px solid', borderColor: alpha('#000', 0.06) }}>
+                  <CardContent sx={{ p: 3 }}>
+                    <Typography variant="subtitle1" fontWeight={600} sx={{ mb: 0.5 }}>Orders by status</Typography>
+                    <Typography variant="caption" color="text.secondary" sx={{ display: 'block', mb: 2 }}>Breakdown of current order states</Typography>
+                    <Box sx={{ height: 280 }}>
                       <ResponsiveContainer width="100%" height="100%">
                         <PieChart>
                           <Pie
@@ -456,14 +467,16 @@ export default function Dashboard() {
                             nameKey="name"
                             cx="50%"
                             cy="50%"
-                            outerRadius={80}
+                            outerRadius={88}
+                            innerRadius={44}
+                            paddingAngle={2}
                             label={({ name, value }) => `${name}: ${value}`}
                           >
                             {orderStatusChartData.map((_, i) => (
-                              <Cell key={i} fill={orderStatusChartData[i].color} />
+                              <Cell key={i} fill={orderStatusChartData[i].color} stroke={theme.palette.background.paper} strokeWidth={2} />
                             ))}
                           </Pie>
-                          <Tooltip formatter={(value) => [Number(value ?? 0), 'Orders']} />
+                          <Tooltip formatter={(value) => [Number(value ?? 0), 'Orders']} contentStyle={{ borderRadius: 8, border: '1px solid', borderColor: alpha('#000', 0.08) }} />
                         </PieChart>
                       </ResponsiveContainer>
                     </Box>
@@ -473,16 +486,25 @@ export default function Dashboard() {
             )}
             {!isDoctor && (
               <Grid item xs={12} md={isAdmin && orderStatusChartData.length > 0 ? 6 : 12}>
-                <Card sx={{ borderRadius: 2, bgcolor: 'background.paper', boxShadow: 1 }}>
-                  <CardContent sx={{ p: 2 }}>
-                    <Typography variant="subtitle1" fontWeight={600} sx={{ mb: 2 }}>Orders (last 7 days)</Typography>
-                    <Box sx={{ height: 260 }}>
+                <Card sx={{ borderRadius: 2, bgcolor: 'background.paper', border: '1px solid', borderColor: alpha('#000', 0.06) }}>
+                  <CardContent sx={{ p: 3 }}>
+                    <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: 1, mb: 2 }}>
+                      <Box>
+                        <Typography variant="subtitle1" fontWeight={600}>Activity</Typography>
+                        <Typography variant="caption" color="text.secondary">Orders created per day</Typography>
+                      </Box>
+                      <Typography variant="caption" sx={{ px: 1.5, py: 0.5, borderRadius: 1, bgcolor: alpha(theme.palette.primary.main, 0.08), color: 'primary.main', fontWeight: 600 }}>
+                        Timeframe: Last 7 days
+                      </Typography>
+                    </Box>
+                    <Box sx={{ height: 280 }}>
                       <ResponsiveContainer width="100%" height="100%">
                         <BarChart data={ordersByDayChartData} margin={{ top: 8, right: 8, left: 8, bottom: 8 }}>
-                          <XAxis dataKey="date" tick={{ fontSize: 11 }} />
-                          <YAxis tick={{ fontSize: 11 }} />
-                          <Tooltip />
-                          <Bar dataKey="count" fill={theme.palette.primary.main} radius={[4, 4, 0, 0]} name="Orders" />
+                          <CartesianGrid strokeDasharray="3 3" stroke={alpha('#000', 0.06)} vertical={false} />
+                          <XAxis dataKey="date" tick={{ fontSize: 12 }} axisLine={false} tickLine={false} />
+                          <YAxis tick={{ fontSize: 12 }} axisLine={false} tickLine={false} width={28} />
+                          <Tooltip contentStyle={{ borderRadius: 8, border: '1px solid', borderColor: alpha('#000', 0.08) }} />
+                          <Bar dataKey="count" fill={theme.palette.primary.main} radius={[6, 6, 0, 0]} name="Orders" maxBarSize={48} />
                         </BarChart>
                       </ResponsiveContainer>
                     </Box>
@@ -495,11 +517,17 @@ export default function Dashboard() {
       )}
 
       {/* Recent orders / deliveries */}
-      <Typography variant="overline" sx={{ color: 'text.secondary', letterSpacing: 1, fontWeight: 600, display: 'block', mt: 5, mb: 2 }}>
+      <Typography variant="overline" sx={{ ...sectionLabelSx, mt: 5 }}>
         {isCourier ? 'Your deliveries' : 'Recent orders'}
       </Typography>
-      <Card sx={{ bgcolor: 'background.paper', borderRadius: 2 }}>
-        <CardContent sx={{ p: 3 }}>
+      <Card sx={{ bgcolor: 'background.paper', borderRadius: 2, border: '1px solid', borderColor: alpha('#000', 0.06) }}>
+        <CardContent sx={{ p: 0 }}>
+          <Box sx={{ px: 3, py: 2, borderBottom: '1px solid', borderColor: 'divider', bgcolor: alpha(theme.palette.primary.main, 0.03) }}>
+            <Typography variant="subtitle2" fontWeight={600} color="text.secondary">
+              {isCourier ? 'Active deliveries' : 'Latest orders'}
+            </Typography>
+          </Box>
+          <Box sx={{ p: 3 }}>
           {isCourier ? (
             myPickupsData?.data?.length ? (
               <Box component="ul" sx={{ m: 0, p: 0, listStyle: 'none' }}>
@@ -551,6 +579,7 @@ export default function Dashboard() {
               <Typography color="text.secondary">No orders yet.</Typography>
             )
           )}
+          </Box>
         </CardContent>
       </Card>
     </Box>
